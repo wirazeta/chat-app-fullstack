@@ -10,8 +10,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserDto, CreateUserDto } from './dto/user-query.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -23,28 +22,28 @@ export class UsersController {
     private jwtService: JwtService,
   ) {}
 
-  @Post()
-  async create(@Body() createUserDto: CreateUserDto, @Res() res) {
-    const { name, email, password } = createUserDto;
-    if (!name || !email || !password) {
-      return res
-        .status(HttpStatus.BAD_REQUEST)
-        .json({ msg: 'Please enter all fields' });
-    }
-    const user = await this.usersService.create(createUserDto);
+  // @Post()
+  // async create(@Body() createUserDto: CreateUserDto, @Res() res) {
+  //   const { name, email, password } = createUserDto;
+  //   if (!name || !email || !password) {
+  //     return res
+  //       .status(HttpStatus.BAD_REQUEST)
+  //       .json({ msg: 'Please enter all fields' });
+  //   }
+  //   const user = await this.usersService.create(createUserDto);
 
-    console.log(user._id.toString());
+  //   console.log(user._id.toString());
 
-    const token = await this.jwtService.signAsync({ id: user._id.toString() });
+  //   const token = await this.jwtService.signAsync({ id: user._id.toString() });
 
-    console.log(token);
+  //   console.log(token);
 
-    return res.status(HttpStatus.OK).json({
-      msg: 'User created successfully',
-      user,
-      token: token,
-    });
-  }
+  //   return res.status(HttpStatus.OK).json({
+  //     msg: 'User created successfully',
+  //     user,
+  //     token: token,
+  //   });
+  // }
 
   @Get()
   async findAll() {

@@ -8,6 +8,7 @@ import { Model } from 'mongoose';
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+
   async create(createUserDto: CreateUserDto): Promise<UsersProfile> {
     const { email } = createUserDto;
     // Check if user exists
@@ -20,19 +21,6 @@ export class UsersService {
     const user = new this.userModel(createUserDto);
 
     return await user.save();
-  }
-
-  async login(loginUserDto: LoginUserDto): Promise<UsersProfile | null> {
-    try{
-      const user = await this.userModel.findOne({email: loginUserDto.email});
-      if(user.password === loginUserDto.password){
-        return user;
-      }else{
-        return null
-      }
-    }catch(err){
-      throw new err
-    }
   }
 
   async findAll() {

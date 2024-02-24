@@ -33,7 +33,7 @@ export class User {
   })
   isAdmin: boolean
 
-  async function(enteredPassword: string) {
+  async matchPassword(enteredPassword: string) {
     return await bcrypt.compare(enteredPassword, this.password);    
   }
 

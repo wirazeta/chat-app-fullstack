@@ -14,23 +14,26 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
 
   const config = new DocumentBuilder()
-    .setTitle('API')
-    .setDescription('The API description')
+    .setTitle('Chat API')
+    .setDescription('The Chat API that will be used in the chat application')
     .setVersion('1.0')
+    .addTag('auth')
     .addTag('users')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/doc', app, document);
 
-  await app.listen(3000);
+  const port = 3000;
+
+  await app.listen(port);
 
   if (module.hot) {
     module.hot.accept();
     module.hot.dispose(() => app.close());
   }
 
-  console.log(`http://localhost:3000/`);
+  console.log(`http://localhost:${port}/`);
 
 }
 bootstrap();
