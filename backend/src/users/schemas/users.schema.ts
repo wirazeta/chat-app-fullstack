@@ -5,8 +5,13 @@ import * as bcrypt from 'bcryptjs';
 
 export type UserDocument = HydratedDocument<User>
 
-@Schema()
+const schemaOpts = {
+  timestamps: true
+}
+
+@Schema(schemaOpts)
 export class User {
+  [x: string]: any;
   @Prop()
   name: string
 
@@ -28,10 +33,6 @@ export class User {
   })
   isAdmin: boolean
 
-  @Prop()
-  timestamps: true
-  _id: string;
-
   async function(enteredPassword: string) {
     return await bcrypt.compare(enteredPassword, this.password);    
   }
@@ -52,4 +53,8 @@ UserSchema.pre('save', async function(next) {
   this.password = await bcrypt.hash(this.password, salt);
 });
 
-UserSchema
+UserSchema.methods.toJSON = function() {
+  const obj = this.toObject();
+  delete obj.password;
+  return obj;
+}
