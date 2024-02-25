@@ -17,6 +17,11 @@ async function bootstrap() {
     .setTitle('Chat API')
     .setDescription('The Chat API that will be used in the chat application')
     .setVersion('1.0')
+    .addSecurity('',{
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT'
+    })
     .addTag('auth')
     .addTag('users')
     .build();

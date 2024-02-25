@@ -12,7 +12,8 @@ import {
 import { UsersService } from './users.service';
 import { UpdateUserDto, CreateUserDto } from './dto/user-query.dto';
 import { JwtService } from '@nestjs/jwt';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBasicAuth, ApiTags } from '@nestjs/swagger';
+
 
 @ApiTags('users')
 @Controller('users')
@@ -55,6 +56,7 @@ export class UsersController {
     return this.usersService.findOne(+id);
   }
 
+  @ApiBasicAuth()
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);
