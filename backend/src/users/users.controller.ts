@@ -8,11 +8,14 @@ import {
   Delete,
   Res,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto, CreateUserDto } from './dto/user-query.dto';
+import { Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
-import { ApiBasicAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { TokenGuard } from 'src/token/token.guard';
 
 
 @ApiTags('users')
@@ -21,34 +24,18 @@ export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
-  // @Post()
-  // async create(@Body() createUserDto: CreateUserDto, @Res() res) {
-  //   const { name, email, password } = createUserDto;
-  //   if (!name || !email || !password) {
-  //     return res
-  //       .status(HttpStatus.BAD_REQUEST)
-  //       .json({ msg: 'Please enter all fields' });
-  //   }
-  //   const user = await this.usersService.create(createUserDto);
-
-  //   console.log(user._id.toString());
-
-  //   const token = await this.jwtService.signAsync({ id: user._id.toString() });
-
-  //   console.log(token);
-
-  //   return res.status(HttpStatus.OK).json({
-  //     msg: 'User created successfully',
-  //     user,
-  //     token: token,
-  //   });
-  // }
-
+  @UseGuards(TokenGuard)
   @Get()
-  async findAll() {
-    console.log(await this.usersService.findAll());
+  @ApiBearerAuth()
+  async findAll(@Res() res: Response) {
+    const data = await this.usersService.findAll();
+    console.log("This is get all users");
+    return res.status(HttpStatus.OK).json({
+      message: 'success',
+      data,
+    });
   }
 
   @Get(':id')
@@ -56,7 +43,8 @@ export class UsersController {
     return this.usersService.findOne(+id);
   }
 
-  @ApiBasicAuth()
+  @UseGuards(TokenGuard)
+  @ApiBearerAuth()
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);

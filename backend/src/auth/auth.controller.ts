@@ -1,7 +1,7 @@
-import { Body, Controller, Get, HttpStatus, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ResponseService } from 'src/common/response.util';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UsersService } from 'src/users/users.service';
 import { CreateUserDto, LoginUserDto, UserQueryDto } from 'src/users/dto/user-query.dto';
 import { Request, Response } from 'express';
