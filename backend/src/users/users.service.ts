@@ -4,10 +4,22 @@ import { UsersProfile } from './interfaces/users.interfaces';
 import { User } from './schemas/users.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { CaslAbilityFactory } from 'src/casl/casl-ability.factory/casl-ability.factory';
+
+enum Action {
+  Manage = 'manage',
+  Create = 'create',
+  Read = 'read',
+  Update = 'update',
+  Delete = 'delete',
+}
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<User>,
+    private caslAbilityFactory: CaslAbilityFactory,
+  ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UsersProfile> {
     const { email } = createUserDto;
@@ -23,7 +35,12 @@ export class UsersService {
     return await user.save();
   }
 
-  async findAll() {
+  async findAll(id: String) {
+    const user = await this.userModel.findById(id)
+    const ability = this.caslAbilityFactory.createForUser(user);
+    if(!ability.can(Action.Manage, User)){
+      return;
+    }
     // return 'This action returns all users';
     return await this.userModel.find().exec();
   }

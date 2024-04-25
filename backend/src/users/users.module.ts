@@ -4,6 +4,7 @@ import { UsersController } from './users.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './schemas/users.schema';
 import { JwtModule } from '@nestjs/jwt';
+import { CaslModule } from 'src/casl/casl.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { JwtModule } from '@nestjs/jwt';
       secret: 'secret',
       signOptions: { expiresIn: '30d' },
     }),
+    CaslModule,
   ],
   controllers: [UsersController],
   providers: [UsersService],

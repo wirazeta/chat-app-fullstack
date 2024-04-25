@@ -21,14 +21,16 @@ export class CaslAbilityFactory {
     createForUser(user: User) {
         const {can, cannot, build} = new AbilityBuilder(createMongoAbility<PossibilityAbility, Conditions>);
         
-        if(user.isAdmin){
-            can(Action.Manage, 'all');
+        // Admin ability
+        if(user.isAdmin === true){
+            can(Action.Manage, 'all'); // read-write access to everything
         }else{
-            can(Action.Read, 'all');
+            can(Action.Read, 'all'); // read-only access to everything
         }
 
         // User Ability
         can(Action.Update, User, {_id : user._id});
+        can(Action.Delete, User, {_id: user._id});
 
         return build({
             detectSubjectType: (item) => 

@@ -7,6 +7,7 @@ import { UsersModule } from 'src/users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { UsersService } from 'src/users/users.service';
 import { ResponseService } from 'src/common/response.util';
+import { CaslModule } from 'src/casl/casl.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { ResponseService } from 'src/common/response.util';
       }    
     ]),
     PassportModule,
-    UsersModule
+    UsersModule,
+    CaslModule,
   ],
   controllers: [AuthController],
   providers: [UsersService, ResponseService, AuthService],
