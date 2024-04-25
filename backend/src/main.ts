@@ -34,7 +34,7 @@ async function bootstrap() {
     module.hot.dispose(() => app.close());
   }
 
-  console.log(`http://localhost:${port}/`);
+  console.log(`http://localhost:${port}/api`);
 
 }
 bootstrap();

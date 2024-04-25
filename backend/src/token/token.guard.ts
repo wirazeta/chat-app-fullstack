@@ -15,7 +15,7 @@ export class TokenGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
     if(!token) throw new UnauthorizedException('Please provide token');
-    return false;
+    return true;
   }
 
   private extractTokenFromHeader(req: Request){
