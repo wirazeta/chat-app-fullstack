@@ -23,7 +23,7 @@ module.exports = function (options, webpack) {
       new webpack.WatchIgnorePlugin({
         paths: [/\.js$/, /\.d\.ts$/],
       }),
-      new RunScriptWebpackPlugin({ name: options.output.filename, autoRestart: false }),
+      new RunScriptWebpackPlugin({ name: options.output.filename, autoRestart: true }),
     //   new CopyPlugin([
     //     {
     //         // Copy static asset files so that they can be served from output directory as swagger-ui-dist does not work

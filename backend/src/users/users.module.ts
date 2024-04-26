@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './schemas/users.schema';
 import { JwtModule } from '@nestjs/jwt';
 import { CaslModule } from 'src/casl/casl.module';
+import { ResponseService } from 'src/common/response.util';
 
 @Module({
   imports: [
@@ -17,6 +18,6 @@ import { CaslModule } from 'src/casl/casl.module';
     CaslModule,
   ],
   controllers: [UsersController],
-  providers: [UsersService],
+  providers: [UsersService, ResponseService],
 })
 export class UsersModule {}

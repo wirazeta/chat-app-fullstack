@@ -33,10 +33,10 @@ export class ResponseService {
     }
 
     // Function to return Success Response
-    ReturnHttpSuccess(req: Request, data: any): ApiResponse<any> {
+    ReturnHttpSuccess(req: Request, data: any, successCode): ApiResponse<any> {
         const status = "OK";
         const path = req.path;
-        const statusCode = HttpStatus.OK;
+        const statusCode = successCode;
         const requestId = req.headers['x-request-id'] || '';
 
         return {

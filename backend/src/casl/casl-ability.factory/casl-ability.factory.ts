@@ -1,14 +1,7 @@
 import { AbilityBuilder, createMongoAbility, ExtractSubjectType, InferSubjects, MongoAbility, MongoQuery } from "@casl/ability";
 import { Injectable } from "@nestjs/common";
 import { User } from "src/users/schemas/users.schema";
-
-enum Action {
-    Manage = 'manage',
-    Create = 'create',
-    Read = 'read',
-    Update = 'update',
-    Delete = 'delete',
-}
+import { Action } from "./action-ability";
 
 type Subject = InferSubjects<typeof User> | "all";
 type PossibilityAbility = [Action, Subject]
@@ -24,12 +17,11 @@ export class CaslAbilityFactory {
         // Admin ability
         if(user.isAdmin === true){
             can(Action.Manage, 'all'); // read-write access to everything
-        }else{
-            can(Action.Read, 'all'); // read-only access to everything
         }
 
         // User Ability
-        can(Action.Update, User, {_id : user._id});
+        can(Action.Read, User);
+        can(Action.Update, User, {_id: user._id});
         can(Action.Delete, User, {_id: user._id});
 
         return build({

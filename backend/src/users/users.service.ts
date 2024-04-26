@@ -5,14 +5,7 @@ import { User } from './schemas/users.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CaslAbilityFactory } from 'src/casl/casl-ability.factory/casl-ability.factory';
-
-enum Action {
-  Manage = 'manage',
-  Create = 'create',
-  Read = 'read',
-  Update = 'update',
-  Delete = 'delete',
-}
+import { Action } from 'src/casl/casl-ability.factory/action-ability';
 
 @Injectable()
 export class UsersService {
@@ -27,7 +20,7 @@ export class UsersService {
     const userExist = await this.userModel.findOne({ email });
 
     if (userExist) {
-      throw new Error('User already exists');
+      return;
     }
 
     const user = new this.userModel(createUserDto);
@@ -36,17 +29,21 @@ export class UsersService {
   }
 
   async findAll(id: String) {
-    const user = await this.userModel.findById(id)
-    const ability = this.caslAbilityFactory.createForUser(user);
-    if(!ability.can(Action.Manage, User)){
-      return;
-    }
+    const user = await this.userModel.findById(id);
+    // const ability = this.caslAbilityFactory.createForUser(user);
+    // if(!ability.can(Action.Manage, User)){
+    //   return;
+    // }
     // return 'This action returns all users';
     return await this.userModel.find().exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: String) {
+    const user = await this.userModel.findById(id);
+    if(!user){
+      return;
+    }
+    return user;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
