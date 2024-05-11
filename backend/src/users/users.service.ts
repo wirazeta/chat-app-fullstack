@@ -28,14 +28,14 @@ export class UsersService {
     return await user.save();
   }
 
-  async findAll(id: String) {
-    const user = await this.userModel.findById(id);
+  async findAll() {
+    const users = await this.userModel.find();
     // const ability = this.caslAbilityFactory.createForUser(user);
     // if(!ability.can(Action.Manage, User)){
     //   return;
     // }
     // return 'This action returns all users';
-    return await this.userModel.find().exec();
+    return users;
   }
 
   async findOne(id: String) {
@@ -46,9 +46,12 @@ export class UsersService {
     return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    const updateValue = updateUserDto;
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const updateValue = await this.userModel.updateOne({ _id: id }, updateUserDto);
+    if(!updateValue){
+      return;
+    }
+    return updateValue;
   }
 
   remove(id: number) {

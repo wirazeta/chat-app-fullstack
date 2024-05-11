@@ -87,9 +87,9 @@ export class UsersController {
   })
   @Get()
   async findAll(@Res() res: Response, @Req() req) {
-    const data = await this.usersService.findAll(req.user.sub);
+    const data = await this.usersService.findAll();
     if(!data){
-      return res.status(HttpStatus.UNAUTHORIZED).json(this.responseService.ReturnHttpError(req, HttpStatus.BAD_REQUEST));
+      return res.status(HttpStatus.BAD_REQUEST).json(this.responseService.ReturnHttpError(req, HttpStatus.BAD_REQUEST));
     }
     return res.status(HttpStatus.OK).json(this.responseService.ReturnHttpSuccess(req, data, HttpStatus.OK));
   }
@@ -168,11 +168,47 @@ export class UsersController {
 
   @UseGuards(TokenGuard)
   @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Update User',
+    content:{
+      'application/json':{
+        example:{
+          "message": {
+            "title": "OK",
+            "body": "SUCCESS"
+          },
+          "metadata": {
+            "path": "/api/users/65d972caa3b41414ba89fa46",
+            "statusCode": 200,
+            "status": "OK",
+            "message": "/api/users/65d972caa3b41414ba89fa46 [200] OK",
+            "timestamp": "2024-05-11T13:31:17.440Z",
+            "requestId": "requestId",
+            "timeElapsed": "0.0"
+          },
+          "data": {
+            "acknowledged": true,
+            "modifiedCount": 1,
+            "upsertedId": null,
+            "upsertedCount": 0,
+            "matchedCount": 1
+          }
+        }
+      }
+    }
+  })
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  async update(@Param('id') id: string,@Body() userUpdateDto: UpdateUserDto ,@Req() req, @Res() res: Response) {
+    const update = await this.usersService.update(id, userUpdateDto);
+    if(!update){
+      return res.status(HttpStatus.BAD_REQUEST).json(this.responseService.ReturnHttpError(req, HttpStatus.BAD_REQUEST)); 
+    }
+    return res.status(HttpStatus.OK).json(this.responseService.ReturnHttpSuccess(req, update, HttpStatus.OK));
   }
 
+  @UseGuards(TokenGuard)
+  @ApiBearerAuth()
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);

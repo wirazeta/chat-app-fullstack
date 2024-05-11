@@ -64,6 +64,21 @@ export class UpdateUserDto extends PartialType(CreateUserDto){
     @IsString()
     @IsOptional()
     _id?:string;
+
+    @IsString()
+    @IsOptional()
+    @ApiProperty()
+    name: string;
+    
+    @IsString()
+    @IsOptional()
+    @ApiProperty()
+    password: string;
+    
+    @IsEmail()
+    @IsOptional()
+    @ApiProperty()
+    email: string;
 }
 
 // Delete User DTO
