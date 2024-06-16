@@ -34,6 +34,7 @@
     "reflect-metadata": "^0.2.1",
     "run-script-webpack-plugin": "^0.2.0",
     "rxjs": "^7.8.1",
+    "soft-delete-mongoose-plugin": "^1.1.3",
     "webpack": "^5.90.2",
     "webpack-node-externals": "^3.0.0",
     "yarn": "^1.22.21"
