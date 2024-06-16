@@ -55,6 +55,10 @@ export class UsersService {
   }
 
   remove(id: number) {
-    return `This action removes a #${id} user`;
+    const deleteValue = this.userModel.deleteOne({_id:id});
+    if(!deleteValue){
+      return;
+    }
+    return deleteValue;
   }
 }

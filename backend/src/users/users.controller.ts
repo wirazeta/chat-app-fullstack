@@ -210,7 +210,11 @@ export class UsersController {
   @UseGuards(TokenGuard)
   @ApiBearerAuth()
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  remove(@Param('id') id: string, @Req() req, @Res() res: Response) {
+    const deleteData = this.usersService.remove(+id);
+    if(!deleteData){
+      return res.status(HttpStatus.BAD_REQUEST).json(this.responseService.ReturnHttpError(req, HttpStatus.BAD_REQUEST));
+    }
+    return res.status(HttpStatus.OK).json(this.responseService.ReturnHttpSuccess(req, deleteData, HttpStatus.OK));
   }
 }
