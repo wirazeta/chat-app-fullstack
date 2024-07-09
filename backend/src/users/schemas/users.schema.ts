@@ -31,6 +31,7 @@ export class User {
     required: true,
     default: false
   })
+  
   isAdmin: boolean
 
   async matchPassword(enteredPassword: string) {
