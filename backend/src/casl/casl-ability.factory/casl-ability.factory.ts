@@ -22,7 +22,6 @@ export class CaslAbilityFactory {
         // User Ability
         can(Action.Read, User);
         can(Action.Update, User, {_id: user._id});
-        can(Action.Delete, User, {_id: user._id});
 
         return build({
             detectSubjectType: (item) => 

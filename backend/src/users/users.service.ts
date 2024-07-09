@@ -3,7 +3,7 @@ import { CreateUserDto, UpdateUserDto, LoginUserDto, UserQueryDto } from './dto/
 import { UsersProfile } from './interfaces/users.interfaces';
 import { User } from './schemas/users.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { CaslAbilityFactory } from 'src/casl/casl-ability.factory/casl-ability.factory';
 import { Action } from 'src/casl/casl-ability.factory/action-ability';
 
@@ -54,11 +54,19 @@ export class UsersService {
     return updateValue;
   }
 
-  remove(id: number) {
-    const deleteValue = this.userModel.deleteOne({_id:id});
-    if(!deleteValue){
+  async remove(id: string) {
+    if(!mongoose.Types.ObjectId.isValid(id)){
       return;
     }
-    return deleteValue;
+    const deleteValue = await this.userModel.deleteOne({_id: id}).then((data) => {
+      // if(data.deletedCount === 0) return;
+      return {
+        deletedCount: data.deletedCount
+      }
+    });
+    // if(!deleteValue){
+    //   return;
+    // }
+    return !deleteValue;
   }
 }

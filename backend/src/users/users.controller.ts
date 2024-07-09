@@ -15,7 +15,7 @@ import { UsersService } from './users.service';
 import { UpdateUserDto, CreateUserDto } from './dto/user-query.dto';
 import { Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
-import { ApiBearerAuth, ApiTags, ApiResponse, ApiBadRequestResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags, ApiResponse, ApiBadRequestResponse, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { TokenGuard } from 'src/token/token.guard';
 import { CaslAbilityFactory } from 'src/casl/casl-ability.factory/casl-ability.factory';
 import { User } from './schemas/users.schema';
@@ -43,9 +43,9 @@ export class UsersController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Get All Users',
-    content:{
-      'application/json':{
-        example:{
+    content: {
+      'application/json': {
+        example: {
           "message": {
             "title": "OK",
             "body": "SUCCESS"
@@ -88,7 +88,7 @@ export class UsersController {
   @Get()
   async findAll(@Res() res: Response, @Req() req) {
     const data = await this.usersService.findAll();
-    if(!data){
+    if (!data) {
       return res.status(HttpStatus.BAD_REQUEST).json(this.responseService.ReturnHttpError(req, HttpStatus.BAD_REQUEST));
     }
     return res.status(HttpStatus.OK).json(this.responseService.ReturnHttpSuccess(req, data, HttpStatus.OK));
@@ -99,9 +99,9 @@ export class UsersController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Get User By Id',
-    content:{
-      'application/json':{
-        example:{
+    content: {
+      'application/json': {
+        example: {
           "message": {
             "title": "OK",
             "body": "SUCCESS"
@@ -132,9 +132,9 @@ export class UsersController {
   @ApiBadRequestResponse({
     description: 'Bad Request',
     status: 400,
-    content:{
-      'application/json':{
-        example:{
+    content: {
+      'application/json': {
+        example: {
           "message": {
             "title": "Error",
             "body": "Error"
@@ -156,11 +156,11 @@ export class UsersController {
   async findOne(@Param('id') id: String, @Res() res: Response, @Req() req) {
     const user = await this.usersService.findOne(req.user.sub);
     const ability = this.caslAbilityFactory.createForUser(user);
-    if(!ability.can(Action.Read, User)){
+    if (!ability.can(Action.Read, User)) {
       return res.status(HttpStatus.UNAUTHORIZED).json(this.responseService.ReturnHttpError(req, HttpStatus.UNAUTHORIZED));
     }
     const data = await this.usersService.findOne(id);
-    if(!data){
+    if (!data) {
       return res.status(HttpStatus.BAD_REQUEST).json(this.responseService.ReturnHttpError(req, HttpStatus.BAD_REQUEST));
     }
     return res.status(HttpStatus.OK).json(this.responseService.ReturnHttpSuccess(req, data, HttpStatus.OK));
@@ -171,9 +171,9 @@ export class UsersController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Update User',
-    content:{
-      'application/json':{
-        example:{
+    content: {
+      'application/json': {
+        example: {
           "message": {
             "title": "OK",
             "body": "SUCCESS"
@@ -199,20 +199,100 @@ export class UsersController {
     }
   })
   @Patch(':id')
-  async update(@Param('id') id: string,@Body() userUpdateDto: UpdateUserDto ,@Req() req, @Res() res: Response) {
+  async update(@Param('id') id: string, @Body() userUpdateDto: UpdateUserDto, @Req() req, @Res() res: Response) {
     const update = await this.usersService.update(id, userUpdateDto);
-    if(!update){
-      return res.status(HttpStatus.BAD_REQUEST).json(this.responseService.ReturnHttpError(req, HttpStatus.BAD_REQUEST)); 
+    if (!update) {
+      return res.status(HttpStatus.BAD_REQUEST).json(this.responseService.ReturnHttpError(req, HttpStatus.BAD_REQUEST));
     }
     return res.status(HttpStatus.OK).json(this.responseService.ReturnHttpSuccess(req, update, HttpStatus.OK));
   }
 
   @UseGuards(TokenGuard)
   @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Delete User',
+    content: {
+      'application/json': {
+        example: {
+          "message": {
+            "title": "OK",
+            "body": "SUCCESS"
+          },
+          "metadata": {
+            "path": "/api/users/65dac29c3f01c34147d85ede",
+            "statusCode": 200,
+            "status": "OK",
+            "message": "/api/users/65dac29c3f01c34147d85ede [200] OK",
+            "timestamp": "2024-07-09T02:37:07.263Z",
+            "requestId": "requestId",
+            "timeElapsed": "0.0"
+          },
+          "data": {
+            "deletedCount": 0
+          }
+        }
+      }
+    }
+  })
+  @ApiBadRequestResponse(
+    {
+      status: HttpStatus.BAD_REQUEST,
+      description: 'Bad Request',
+      content:{
+        'application/json': {
+          example:{
+            "message": {
+              "title": "Error",
+              "body": "Error"
+            },
+            "metadata": {
+              "path": "/api/users/65d98b8d221045c9dafbbf6l",
+              "statusCode": 400,
+              "status": "Error",
+              "message": "/api/users/65d98b8d221045c9dafbbf6l [400] Error",
+              "timestamp": "2024-07-09T03:09:07.509Z",
+              "requestId": "requestId",
+              "timeElapsed": "0.0"
+            }          
+          }
+        }
+      }
+    }
+  )
+  @ApiUnauthorizedResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized',
+    content:{
+      'application/json':{
+        example:{
+          "message": {
+            "title": "Error",
+            "body": "Error"
+          },
+          "metadata": {
+            "path": "/api/users/65dac29c3f01c34147d85ede",
+            "statusCode": 401,
+            "status": "Error",
+            "message": "/api/users/65dac29c3f01c34147d85ede [401] Error",
+            "timestamp": "2024-07-09T02:29:56.885Z",
+            "requestId": "requestId",
+            "timeElapsed": "0.0"
+          }        
+        }
+      }
+    }
+  })
   @Delete(':id')
-  remove(@Param('id') id: string, @Req() req, @Res() res: Response) {
-    const deleteData = this.usersService.remove(+id);
-    if(!deleteData){
+  async remove(@Param('id') id: string, @Req() req, @Res() res: Response) {
+    const user = await this.usersService.findOne(req.user.sub);
+    const ability = this.caslAbilityFactory.createForUser(user);
+    if (!ability.can(Action.Delete, User)) {
+      return res.status(HttpStatus.UNAUTHORIZED).json(this.responseService.ReturnHttpError(req, HttpStatus.UNAUTHORIZED));
+    }
+    const deleteData = await this.usersService.remove(id);
+    console.log(deleteData);
+    if (!deleteData) {
       return res.status(HttpStatus.BAD_REQUEST).json(this.responseService.ReturnHttpError(req, HttpStatus.BAD_REQUEST));
     }
     return res.status(HttpStatus.OK).json(this.responseService.ReturnHttpSuccess(req, deleteData, HttpStatus.OK));
