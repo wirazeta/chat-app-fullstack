@@ -10,29 +10,23 @@ const schemaOpts = {
 }
 
 @Schema(schemaOpts)
-export class Chat {
-    @Prop({
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    })
+export class Chat{
+    [x: string]: any;
+    @Prop({trim: true})
+    name:string
+
+    @Prop({default: false})
+    isGroupChat: Boolean
+
+    @Prop({ type: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}] })
     users: User[]
 
-    @Prop()
-    groupName: string
-    
-    @Prop({
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    })
-    createdBy: User
+    @Prop({ref: 'Message'})
+    latestMessage: mongoose.Schema.Types.ObjectId
 
-    @Prop({
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Message'
-    })
-    latestMessage: Message
+    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'User'})
+    gropupAdmin: User
 }
-
 
 export const ChatSchema = SchemaFactory.createForClass(Chat);
 

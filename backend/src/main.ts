@@ -2,6 +2,7 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 import { AppModule } from './app.module';
+const {SwaggerTheme, SwaggerThemeNameEnum} = require('swagger-theme');
 declare const module: any;
 
 async function bootstrap() {
@@ -13,6 +14,8 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
 
+  const theme = new SwaggerTheme();
+
   const config = new DocumentBuilder()
     .setTitle('Chat API')
     .setDescription('The Chat API that will be used in the chat application')
@@ -22,8 +25,13 @@ async function bootstrap() {
     .addTag('users')
     .build();
 
+  const options = {
+    explorer: true,
+    customCss: theme.getBuffer(SwaggerThemeNameEnum.DARK)
+  };
+
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/doc', app, document);
+  SwaggerModule.setup('api/doc', app, document, options);
 
   const port = 3000;
 

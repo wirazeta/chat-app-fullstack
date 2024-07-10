@@ -10,6 +10,7 @@
     "mongoose": "^8.1.2",
     "passport-jwt": "^4.0.1",
     "socket.io": "^4.7.4",
+    "swagger-theme": "^1.0.15",
     "swagger-ui-express": "^5.0.0",
     "yarn": "^1.22.21"
   },
