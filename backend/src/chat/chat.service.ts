@@ -1,9 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { CreateChatDto } from './dto/chat-query.dto';
 import { UpdateChatDto } from './dto/update-chat.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Chat } from './schemas/chat.schema';
+import { Model } from 'mongoose';
+import { ChatModel } from './schmeas/chat.schema';
 
 @Injectable()
 export class ChatService {
+  @InjectModel('Chat') private chatModel: Model<Chat>
   create(createChatDto: CreateChatDto) {
     return 'This action adds a new chat';
   }

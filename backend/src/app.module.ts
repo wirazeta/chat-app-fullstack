@@ -7,10 +7,11 @@ import * as dotenv from 'dotenv';
 import { AuthModule } from './auth/auth.module';
 import { CaslModule } from './casl/casl.module';
 import { ChatModule } from './chat/chat.module';
+import { MessageModule } from './message/message.module';
 dotenv.config()
 
 @Module({
-  imports: [MongooseModule.forRoot(process.env.MONGO_URI), UsersModule, AuthModule, CaslModule, ChatModule],
+  imports: [MongooseModule.forRoot(process.env.MONGO_URI), UsersModule, AuthModule, CaslModule, ChatModule, MessageModule],
   controllers: [AppController],
   providers: [AppService],
 })

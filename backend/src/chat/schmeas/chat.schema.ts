@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
-import mongoose, { HydratedDocument } from 'mongoose';
+import mongoose, { Document, HydratedDocument } from 'mongoose';
 import { User } from '../../users/schemas/users.schema';
+import { Message } from '../../message/schemas/message.schema';
 import * as bcrypt from 'bcryptjs';
 
 export type UserDocument = HydratedDocument<Chat>
@@ -10,10 +11,10 @@ const schemaOpts = {
 }
 
 @Schema(schemaOpts)
-export class Chat {
+export class Chat extends Document{
     @Prop({
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: () => 'User'
     })
     users: User[]
 
@@ -22,18 +23,22 @@ export class Chat {
     
     @Prop({
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: () => 'User'
     })
     createdBy: User
 
     @Prop({
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Message'
+        ref: () => 'Message'
     })
     latestMessage: Message
+
+    @Prop({default: false})
+    isGroupChat: boolean
 }
 
 
 export const ChatSchema = SchemaFactory.createForClass(Chat);
+export const ChatModel = mongoose.model('Chat', ChatSchema);
 
 module.exports = Chat;
