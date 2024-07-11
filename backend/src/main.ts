@@ -23,6 +23,8 @@ async function bootstrap() {
     .addBearerAuth()
     .addTag('auth')
     .addTag('users')
+    .addTag('chat')
+    .addTag('message')
     .build();
 
   // const options = {

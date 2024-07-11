@@ -1,19 +1,31 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Res, UseGuards, HttpStatus } from '@nestjs/common';
 import { ChatService } from './chat.service';
-import { CreateChatDto } from './dto/chat-query.dto';
+import { AccessChatDto, CreateChatDto } from './dto/chat-query.dto';
 import { UpdateChatDto } from './dto/update-chat.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { TokenGuard } from 'src/token/token.guard';
+import { ResponseService } from 'src/common/response.util';
 
-@Controller('chat')
+@ApiTags('chat')
+@Controller()
 export class ChatController {
-  constructor(private readonly chatService: ChatService) {}
+  constructor(
+    private readonly chatService: ChatService,
+    private responseService: ResponseService
+  ) {}
 
+
+  // Create or Fetch One to One Chat 
   @UseGuards(TokenGuard)
   @ApiBearerAuth()
   @Post()
-  async createGroupChat(@Body() createChatDto: CreateChatDto, @Req() req, @Res() res) {
-    const groupChat = await this.chatService.create(createChatDto);
+  async accessChat(@Body() accessChatDto: AccessChatDto, @Req() req, @Res() res){
+    const accessChat = await this.chatService.accessChat(req.user.sub, accessChatDto);
+    // return accessChat;
+    if(!accessChat){
+      return res.status(HttpStatus.NOT_FOUND).json(this.responseService.ReturnHttpError(req, HttpStatus.NOT_FOUND));
+    }
+    return res.status(HttpStatus.OK).json(this.responseService.ReturnHttpSuccess(req, accessChat, HttpStatus.OK));
   }
 
   @Get()
