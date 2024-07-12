@@ -13,9 +13,10 @@ const schemaOpts = {
 @Schema(schemaOpts)
 export class Chat{
     [x: string]: any;
-    @Prop({
+
+    @Prop({type: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: () => 'User'
+        ref: () => 'User'}]
     })
     users: User[]
 

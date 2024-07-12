@@ -1,10 +1,15 @@
-import { IsOptional, IsString } from "class-validator";
+import { IsObject, IsOptional, IsString } from "class-validator";
 import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { User } from "src/users/schemas/users.schema";
 
 export class CreateChatDto {
     @IsString()
     @IsOptional()
     chatName?: string;
+
+    @IsObject()
+    @ApiProperty()
+    users: User[]
 }
 
 export class AccessChatDto {

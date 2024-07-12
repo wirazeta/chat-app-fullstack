@@ -28,9 +28,15 @@ export class ChatController {
     return res.status(HttpStatus.OK).json(this.responseService.ReturnHttpSuccess(req, accessChat, HttpStatus.OK));
   }
 
+  @UseGuards(TokenGuard)
+  @ApiBearerAuth()
   @Get()
-  findAll() {
-    return this.chatService.findAll();
+  async findAll(@Req() req, @Res() res) {
+    const chats = await this.chatService.findAll(req.user.sub);
+    if(!chats){
+      return res.status(HttpStatus.NOT_FOUND).json(this.responseService.ReturnHttpError(req, HttpStatus.NOT_FOUND));
+    }
+    return res.status(HttpStatus.OK).json(this.responseService.ReturnHttpSuccess(req, chats, HttpStatus.OK));
   }
 
   @Get(':id')
