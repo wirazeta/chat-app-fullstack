@@ -21,10 +21,15 @@ export class MessageService {
     }
 
     try {
-      var message = await this.messageModel.create(newMessage);
-      message = await message.populate("sender", "name pic");
-      message = await message.populate("chat");
-      const latestMessage = await this.userModel.populate(message, {
+      const message = await this.messageModel.create(newMessage);
+      
+      // Bad example for input User document to variable message but I don't have choice :D
+      var latestMessage: any= await this.messageModel.findById(message._id)
+      .populate([
+        {path: "chat"},
+        {path: "sender", select: "name pic"},
+      ]);
+      latestMessage = await this.userModel.populate(latestMessage, {
         path: "chat.users",
         select: "name pic email"
       });
@@ -37,11 +42,13 @@ export class MessageService {
   }
 
   async findAll(chatId: string) {
+    console.log(chatId);
     try{
       const message = await this.messageModel.find({
         chat: chatId
-      }).populate("sender", "name pic email")
+      }).populate("sender", "name pic")
       .populate("chat");
+      console.log(message);
       return message;
     }catch(err){
       return err;

@@ -13,7 +13,7 @@ export class Message {
     @Prop({trim: true})
     content: string
 
-    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'ChatModel'})
+    @Prop({type: mongoose.Schema.Types.ObjectId, ref: 'Chat'})
     chat: Chat
 
     @Prop({type: [{type: mongoose.Schema.Types.ObjectId, ref:'User'}]})
