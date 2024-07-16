@@ -26,7 +26,6 @@ export class ChatService {
     })
       .populate("users", "-password")
       .populate("latestMessage");
-    console.log(isChat);
     isChat = await this.userModel.populate(isChat, {
       path: "latestMessage.sender",
       select: "name pic email",
@@ -69,7 +68,6 @@ export class ChatService {
           path: "latestMessage.sender",
           select: "name pic email"
         });
-        console.log(results);
         return results
       });
       return chats;

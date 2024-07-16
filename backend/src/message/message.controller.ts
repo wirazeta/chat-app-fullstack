@@ -1,24 +1,41 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Req, HttpStatus, UseGuards } from '@nestjs/common';
 import { MessageService } from './message.service';
-import { CreateMessageDto } from './dto/create-message.dto';
+import { CreateMessageDto } from './dto/message-query.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ResponseService } from 'src/common/response.util';
+import { TokenGuard } from 'src/token/token.guard';
 
 @ApiTags('message')
 @Controller()
 export class MessageController {
-  constructor(private readonly messageService: MessageService) {}
+  constructor(
+    private readonly messageService: MessageService,
+    private responseService: ResponseService
+  ) {}
 
+  @UseGuards(TokenGuard)
+  @ApiBearerAuth()
   @Post()
-  create(@Body() createMessageDto: CreateMessageDto) {
-    return this.messageService.create(createMessageDto);
+  async create(@Body() createMessageDto: CreateMessageDto, @Res() res, @Req() req) {
+    const created = await this.messageService.create(createMessageDto, req.user.sub);
+    if(!created){
+      return res.status(HttpStatus.BAD_REQUEST).json(this.responseService.ReturnHttpError(req, HttpStatus.BAD_REQUEST));
+    }
+    return res.status(HttpStatus.CREATED).json(this.responseService.ReturnHttpSuccess(req, created, HttpStatus.CREATED));
   }
 
-  @Get()
-  findAll() {
-    return this.messageService.findAll();
+  @Get(':chatId')
+  async findAll(@Param(':chatId') chatId: string, @Req() req, @Res() res) {
+    const messages = await this.messageService.findAll(chatId);
+    if(!messages){
+      return res.status(HttpStatus.BAD_REQUEST).json(this.responseService.ReturnHttpError(req, HttpStatus.BAD_REQUEST));
+    }
+    return res.status(HttpStatus.OK).json(this.responseService.ReturnHttpSuccess(req, messages, HttpStatus.OK));
   }
 
+  @UseGuards(TokenGuard)
+  @ApiBearerAuth()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.messageService.findOne(+id);
