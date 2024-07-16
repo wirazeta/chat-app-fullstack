@@ -33,7 +33,7 @@ async function bootstrap() {
   // };
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/doc', app, document);
+  SwaggerModule.setup('api/docs', app, document);
 
   const port = 3000;
 

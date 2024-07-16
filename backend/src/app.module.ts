@@ -23,10 +23,10 @@ dotenv.config()
     GroupModule,
     RouterModule.register(
       [
-        {
-          path: 'api',
-          module: AppModule,
-        },
+        // {
+        //   path: 'api',
+        //   module: AppModule,
+        // },
         {
           path: 'users',
           module: UsersModule,

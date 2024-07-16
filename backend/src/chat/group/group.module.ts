@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Chat, ChatSchema } from '../schemas/chat.schema';
 import { User, UserSchema } from 'src/users/schemas/users.schema';
 import { MessageSchema } from 'src/message/schemas/message.schema';
+import { ResponseService } from 'src/common/response.util';
 
 @Module({
   imports: [MongooseModule.forFeature([{
@@ -18,6 +19,6 @@ import { MessageSchema } from 'src/message/schemas/message.schema';
     schema: MessageSchema
   }]), GroupModule],
   controllers: [GroupController],
-  providers: [GroupService],
+  providers: [GroupService, ResponseService],
 })
 export class GroupModule {}

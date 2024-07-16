@@ -5,11 +5,12 @@ import { User } from "src/users/schemas/users.schema";
 export class CreateChatDto {
     @IsString()
     @IsOptional()
+    @ApiProperty()
     chatName?: string;
 
     @IsObject()
     @ApiProperty()
-    users: User[]
+    userIds: string[]
 }
 
 export class AccessChatDto {
@@ -29,13 +30,19 @@ export class RenameGroupChatDto {
 
     @IsString()
     @IsOptional()
+    @ApiProperty()
     chatName?:string
 }
 
-export class RemoveGroupChatDto {
+export class RemoveFromGroupDto{
     @IsString()
     @IsOptional()
     chatId?:string
+
+    @IsString()
+    @IsOptional()
+    @ApiProperty()
+    userId?:string
 }
 
 export class AddUserToGroupChatDto {
@@ -45,5 +52,6 @@ export class AddUserToGroupChatDto {
 
     @IsString()
     @IsOptional()
+    @ApiProperty()
     userId?:string
 }
